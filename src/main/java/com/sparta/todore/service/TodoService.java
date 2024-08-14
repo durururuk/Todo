@@ -21,7 +21,7 @@ public class TodoService {
 
         //DB 저장
         TodoRepository todoRepository = new TodoRepository(jdbcTemplate);
-        Todo saveTodo = todoRepository.save(todo);
+        Todo saveTodo = todoRepository.saveTodo(todo);
 
         // Entity >> ResponseDto
         return new TodoResponseDto(saveTodo);
@@ -55,6 +55,19 @@ public class TodoService {
         } else {
             return todoRepository.readAllTodo();
         }
+    }
+
+    //id값으로 담당자명, 일정 내용 수정
+    public TodoResponseDto updateTodo(TodoRequestDto requestDto) {
+        //RequestDto >> Entity
+        Todo todo = new Todo(requestDto);
+
+        //DB 저장
+        TodoRepository todoRepository = new TodoRepository(jdbcTemplate);
+        todoRepository.updateTodoById(todo);
+
+        // Entity >> ResponseDto
+        return new TodoResponseDto(todo);
     }
 }
 

@@ -33,4 +33,10 @@ public class TodoController {
         }
     }
 
+    @PutMapping("/todos")
+    public TodoResponseDto updateTodo(@RequestBody TodoRequestDto requestDto) {
+        TodoService todoService = new TodoService(jdbcTemplate);
+        return todoService.updateTodo(requestDto);
+    }
+
 }

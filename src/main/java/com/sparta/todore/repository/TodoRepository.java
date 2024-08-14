@@ -17,7 +17,7 @@ public class TodoRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Todo save(Todo todo) {
+    public Todo saveTodo(Todo todo) {
         //DB 저장
         //기본 키를 반환받기 위한 객체
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -121,6 +121,12 @@ public class TodoRepository {
                 return new TodoResponseDto(id, username, contents, date);
             }
         });
+    }
+
+    //id값으로 담당자명, 일정 내용 수정
+    public void updateTodoById(Todo todo) {
+        String sql = "UPDATE todos set username = ?, contents = ? where id = ?";
+        jdbcTemplate.update(sql,todo.getUsername(),todo.getContents(),todo.getId());
     }
 
 
