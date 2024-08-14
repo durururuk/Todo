@@ -16,6 +16,7 @@ public class Todo {
     private String password;
     private Date date;
     private int id;
+    private String message;
 
     public Todo(TodoRequestDto requestDto) {
         this.contents = requestDto.getContents();

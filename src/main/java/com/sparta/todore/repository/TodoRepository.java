@@ -37,7 +37,7 @@ public class TodoRepository {
         //DB Insert 후 받아온 기본 키 확인
         Integer id = keyHolder.getKey().intValue();
         todo.setId(id);
-
+        todo.setMessage("등록 성공");
         return todo;
     }
 
@@ -132,8 +132,24 @@ public class TodoRepository {
             // 비밀번호가 맞으면 업데이트 실행
             sql = "UPDATE todos SET username = ?, contents = ? WHERE id = ?";
             jdbcTemplate.update(sql, todo.getUsername(), todo.getContents(), todo.getId());
+            todo.setMessage("수정 성공");
         } else {
-            throw new IllegalArgumentException("비밀번호가 틀렸습니다.");
+            todo.setMessage("비밀번호가 틀렸습니다.");
+        }
+    }
+
+    public void deleteTodoById(Todo todo) {
+        String sql = "SELECT password FROM todos WHERE id = ?";
+        String dbPassword = jdbcTemplate.queryForObject(sql, new Object[]{todo.getId()}, String.class);
+
+        // 비밀번호가 맞는지 확인
+        if (dbPassword.equals(todo.getPassword())) {
+            // 비밀번호가 맞으면 삭제
+            sql = "DELETE FROM todos WHERE id = ?";
+            jdbcTemplate.update(sql, todo.getId());
+            todo.setMessage("삭제 성공");
+        } else {
+            todo.setMessage("비밀번호가 틀렸습니다.");
         }
     }
 

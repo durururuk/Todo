@@ -39,4 +39,10 @@ public class TodoController {
         return todoService.updateTodo(requestDto);
     }
 
+    @DeleteMapping("/todos")
+    public TodoResponseDto deleteTodo(@RequestBody TodoRequestDto requestDto) {
+        TodoService todoService = new TodoService(jdbcTemplate);
+        return todoService.deleteTodo(requestDto);
+    }
+
 }

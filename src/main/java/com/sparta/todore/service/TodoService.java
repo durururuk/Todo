@@ -69,5 +69,15 @@ public class TodoService {
         // Entity >> ResponseDto
         return new TodoResponseDto(todo);
     }
+
+    //id값으로 일정 삭제
+    public TodoResponseDto deleteTodo(TodoRequestDto requestDto) {
+        Todo todo = new Todo(requestDto);
+
+        TodoRepository todoRepository = new TodoRepository(jdbcTemplate);
+        todoRepository.deleteTodoById(todo);
+
+        return new TodoResponseDto(todo);
+    }
 }
 
