@@ -162,3 +162,8 @@ Response
     "message": "삭제 성공"
 }
 ```
+
+ERD
+
+![image](https://github.com/user-attachments/assets/a207dc8f-2f0e-4bb3-9400-842c7ceb1c56)
+
