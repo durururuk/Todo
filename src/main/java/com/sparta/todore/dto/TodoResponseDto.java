@@ -8,7 +8,7 @@ public class TodoResponseDto {
     private String contents;
     private String username;
     private String date;
-    private long id;
+    private Integer id;
 
     public TodoResponseDto(Todo todo) {
         this.contents = todo.getContents();

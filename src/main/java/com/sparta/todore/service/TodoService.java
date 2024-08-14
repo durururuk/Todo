@@ -22,8 +22,20 @@ public class TodoService {
         Todo saveTodo = todoRepository.save(todo);
 
         // Entity >> ResponseDto
-
         return new TodoResponseDto(saveTodo);
+    }
+
+    public TodoResponseDto readFoundTodo(TodoRequestDto requestDto) {
+        //RequestDto >> Entity
+        Todo todo = new Todo(requestDto);
+
+        //DB에서 찾아서 조회
+        TodoRepository todoRepository = new TodoRepository(jdbcTemplate);
+        Todo foundTodo = todoRepository.readFoundTodo(todo.getId());
+
+        // Entity >> ResponseDto
+        return new TodoResponseDto(foundTodo);
+
     }
 }
 

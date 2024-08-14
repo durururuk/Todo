@@ -1,11 +1,13 @@
 package com.sparta.todore.repository;
 
+import com.sparta.todore.dto.TodoRequestDto;
 import com.sparta.todore.entity.Todo;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 
 import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.sql.Statement;
 
 public class TodoRepository {
@@ -33,9 +35,27 @@ public class TodoRepository {
         }, keyHolder);
 
         //DB Insert 후 받아온 기본 키 확인
-        Long id = keyHolder.getKey().longValue();
+        Integer id = keyHolder.getKey().intValue();
         todo.setId(id);
 
         return todo;
+    }
+
+    public Todo readFoundTodo(int id) {
+        // ID로 DB 조회
+        String sql = "SELECT * FROM todos WHERE id = ?";
+
+        return jdbcTemplate.query(sql ,resultSet -> {
+            if (resultSet.next()) {
+                Todo todo = new Todo();
+                todo.setUsername(resultSet.getString("username"));
+                todo.setContents(resultSet.getString("contents"));
+                todo.setDate(resultSet.getString("date"));
+                todo.setId(resultSet.getInt("id"));
+                return todo;
+            } else {
+                return null;
+            }
+        }, id);
     }
 }
