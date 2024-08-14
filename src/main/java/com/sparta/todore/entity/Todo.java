@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.sql.Date;
+
 @Setter
 @Getter
 @NoArgsConstructor
@@ -12,8 +14,8 @@ public class Todo {
     private String contents;
     private String username;
     private String password;
-    private String date;
-    private Integer id;
+    private Date date;
+    private int id;
 
     public Todo(TodoRequestDto requestDto) {
         this.contents = requestDto.getContents();

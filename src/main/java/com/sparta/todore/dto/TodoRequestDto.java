@@ -2,24 +2,19 @@ package com.sparta.todore.dto;
 
 import lombok.Getter;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.sql.Date;
+import java.time.LocalDate;
 
 @Getter
 public class TodoRequestDto {
     private String contents;
     private String username;
     private String password;
-    private Integer id;
-    private final String date = nowDate();
+    private int id;
+    private final Date date = currentSqlDate();
 
-    /**
-     *
-     * @return 현재 시간 (월/일/시/분)
-     */
-    public static String nowDate() {
-        LocalDateTime now = LocalDateTime.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd HH:mm");
-        return now.format(formatter);
+    public static Date currentSqlDate() {
+        LocalDate localDate = LocalDate.now();
+        return Date.valueOf(localDate);
     }
 }

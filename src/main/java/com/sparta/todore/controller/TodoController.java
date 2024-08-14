@@ -2,7 +2,9 @@ package com.sparta.todore.controller;
 
 import com.sparta.todore.dto.TodoRequestDto;
 import com.sparta.todore.dto.TodoResponseDto;
+
 import com.sparta.todore.service.TodoService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,9 +24,13 @@ public class TodoController {
     }
 
     @GetMapping("/todos")
-    public TodoResponseDto readTodobyId(@RequestBody TodoRequestDto requestDto) {
+    public ResponseEntity<?> readTodo(@RequestBody TodoRequestDto requestDto) {
         TodoService todoService = new TodoService(jdbcTemplate);
-        return todoService.readFoundTodo(requestDto);
+        if (requestDto.getId() != 0) {
+            return ResponseEntity.ok(todoService.readTodoById(requestDto));
+        } else {
+            return ResponseEntity.ok(todoService.readTodoElse(requestDto));
+        }
     }
 
 }
