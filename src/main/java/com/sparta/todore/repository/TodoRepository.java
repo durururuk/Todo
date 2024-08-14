@@ -123,10 +123,18 @@ public class TodoRepository {
         });
     }
 
-    //id값으로 담당자명, 일정 내용 수정
     public void updateTodoById(Todo todo) {
-        String sql = "UPDATE todos set username = ?, contents = ? where id = ?";
-        jdbcTemplate.update(sql,todo.getUsername(),todo.getContents(),todo.getId());
+        String sql = "SELECT password FROM todos WHERE id = ?";
+        String dbPassword = jdbcTemplate.queryForObject(sql, new Object[]{todo.getId()}, String.class);
+
+        // 비밀번호가 맞는지 확인
+        if (dbPassword.equals(todo.getPassword())) {
+            // 비밀번호가 맞으면 업데이트 실행
+            sql = "UPDATE todos SET username = ?, contents = ? WHERE id = ?";
+            jdbcTemplate.update(sql, todo.getUsername(), todo.getContents(), todo.getId());
+        } else {
+            throw new IllegalArgumentException("비밀번호가 틀렸습니다.");
+        }
     }
 
 
