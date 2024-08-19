@@ -4,15 +4,17 @@ import com.sparta.todore.dto.TodoRequestDto;
 import com.sparta.todore.dto.TodoResponseDto;
 import com.sparta.todore.entity.Todo;
 import com.sparta.todore.repository.TodoRepository;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
-
+@Component
 public class TodoService {
-    private final JdbcTemplate jdbcTemplate;
+    private final TodoRepository todoRepository;
 
-    public TodoService(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
+    @Autowired
+    public TodoService(TodoRepository todoRepository) {
+        this.todoRepository = todoRepository;
     }
 
     public TodoResponseDto createTodo(TodoRequestDto requestDto) {
@@ -20,7 +22,6 @@ public class TodoService {
         Todo todo = new Todo(requestDto);
 
         //DB 저장
-        TodoRepository todoRepository = new TodoRepository(jdbcTemplate);
         Todo saveTodo = todoRepository.saveTodo(todo);
 
         // Entity >> ResponseDto
@@ -32,7 +33,6 @@ public class TodoService {
         Todo todo = new Todo(requestDto);
 
         //DB에서 찾아서 조회
-        TodoRepository todoRepository = new TodoRepository(jdbcTemplate);
         Todo foundTodo = todoRepository.readTodoById(todo.getId());
 
         // Entity >> ResponseDto
@@ -42,9 +42,6 @@ public class TodoService {
     public List<TodoResponseDto> readTodoElse(TodoRequestDto requestDto) {
         //RequestDto >> Entity
         Todo todo = new Todo(requestDto);
-
-        //DB 조회
-        TodoRepository todoRepository = new TodoRepository(jdbcTemplate);
 
         if (todo.getUsername() != null) {
             return todoRepository.readTodoByUsername(todo.getUsername());
@@ -63,7 +60,6 @@ public class TodoService {
         Todo todo = new Todo(requestDto);
 
         //DB 저장
-        TodoRepository todoRepository = new TodoRepository(jdbcTemplate);
         todoRepository.updateTodoById(todo);
 
         // Entity >> ResponseDto
@@ -74,7 +70,6 @@ public class TodoService {
     public TodoResponseDto deleteTodo(TodoRequestDto requestDto) {
         Todo todo = new Todo(requestDto);
 
-        TodoRepository todoRepository = new TodoRepository(jdbcTemplate);
         todoRepository.deleteTodoById(todo);
 
         return new TodoResponseDto(todo);
