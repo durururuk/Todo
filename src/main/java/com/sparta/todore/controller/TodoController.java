@@ -4,28 +4,27 @@ import com.sparta.todore.dto.TodoRequestDto;
 import com.sparta.todore.dto.TodoResponseDto;
 
 import com.sparta.todore.service.TodoService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api")
 public class TodoController {
-    public final JdbcTemplate jdbcTemplate;
+    private final TodoService todoService;
 
-    public TodoController(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
+    @Autowired
+    public TodoController(TodoService todoService) {
+        this.todoService = todoService;
     }
 
     @PostMapping("/todos")
     public TodoResponseDto createTodo(@RequestBody TodoRequestDto requestDto) {
-        TodoService todoService = new TodoService(jdbcTemplate);
         return todoService.createTodo(requestDto);
     }
 
     @GetMapping("/todos")
     public ResponseEntity<?> readTodo(@RequestBody TodoRequestDto requestDto) {
-        TodoService todoService = new TodoService(jdbcTemplate);
         if (requestDto.getId() != 0) {
             return ResponseEntity.ok(todoService.readTodoById(requestDto));
         } else {
@@ -35,13 +34,11 @@ public class TodoController {
 
     @PutMapping("/todos")
     public TodoResponseDto updateTodo(@RequestBody TodoRequestDto requestDto) {
-        TodoService todoService = new TodoService(jdbcTemplate);
         return todoService.updateTodo(requestDto);
     }
 
     @DeleteMapping("/todos")
     public TodoResponseDto deleteTodo(@RequestBody TodoRequestDto requestDto) {
-        TodoService todoService = new TodoService(jdbcTemplate);
         return todoService.deleteTodo(requestDto);
     }
 
