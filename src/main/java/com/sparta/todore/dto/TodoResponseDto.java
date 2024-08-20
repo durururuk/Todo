@@ -7,10 +7,10 @@ import java.sql.Date;
 
 @Getter
 public class TodoResponseDto {
-    private String contents;
-    private String username;
-    private Date date;
-    private int id;
+    private final String contents;
+    private final String username;
+    private final Date date;
+    private final int id;
     private String message;
 
     public TodoResponseDto(Todo todo) {
@@ -18,14 +18,14 @@ public class TodoResponseDto {
         this.username = todo.getUsername();
         this.date = todo.getDate();
         this.id = todo.getId();
-        this.message = todo.getMessage();
     }
 
-    public TodoResponseDto(int id, String contents, String username, Date date) {
-        this.id = id;
-        this.contents = contents;
-        this.username = username;
-        this.date = date;
-        this.message = "조회 성공";
+    public TodoResponseDto(String message) {
+        this.message = message;
+        this.contents = null;
+        this.username = null;
+        this.date = null;
+        this.id = 0;
     }
+
 }
