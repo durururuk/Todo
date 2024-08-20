@@ -4,45 +4,67 @@ import com.sparta.todore.dto.TodoRequestDto;
 import com.sparta.todore.dto.TodoResponseDto;
 
 import com.sparta.todore.service.TodoService;
-import org.springframework.http.ResponseEntity;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-@RestController
-@RequestMapping("/api")
-public class TodoController {
-    public final JdbcTemplate jdbcTemplate;
+import java.sql.Date;
+import java.util.List;
 
-    public TodoController(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
+@RestController
+@RequestMapping("/api/todos")
+public class TodoController {
+    private final TodoService todoService;
+
+    @Autowired
+    public TodoController(TodoService todoService) {
+        this.todoService = todoService;
     }
 
-    @PostMapping("/todos")
+    @PostMapping
     public TodoResponseDto createTodo(@RequestBody TodoRequestDto requestDto) {
-        TodoService todoService = new TodoService(jdbcTemplate);
         return todoService.createTodo(requestDto);
     }
 
-    @GetMapping("/todos")
-    public ResponseEntity<?> readTodo(@RequestBody TodoRequestDto requestDto) {
-        TodoService todoService = new TodoService(jdbcTemplate);
-        if (requestDto.getId() != 0) {
-            return ResponseEntity.ok(todoService.readTodoById(requestDto));
+    @GetMapping("/id")
+    public TodoResponseDto readTodo(@RequestParam("id") int id) {
+        return todoService.readTodoById(id);
+    }
+
+    @GetMapping
+    public List<TodoResponseDto> readTodos(
+            @RequestParam(value = "username", required = false) String username,
+            @RequestParam(value = "date", required = false) Date date) {
+
+        if (username != null && date != null) {
+            return todoService.readTodoByUsernameAndDate(username, date);
+        } else if (username != null) {
+            return todoService.readTodoByUsername(username);
+        } else if (date != null) {
+            return todoService.readTodoByDate(date);
         } else {
-            return ResponseEntity.ok(todoService.readTodoElse(requestDto));
+            return todoService.readAllTodo();
         }
     }
 
-    @PutMapping("/todos")
+    @PutMapping
     public TodoResponseDto updateTodo(@RequestBody TodoRequestDto requestDto) {
-        TodoService todoService = new TodoService(jdbcTemplate);
         return todoService.updateTodo(requestDto);
     }
 
-    @DeleteMapping("/todos")
-    public TodoResponseDto deleteTodo(@RequestBody TodoRequestDto requestDto) {
-        TodoService todoService = new TodoService(jdbcTemplate);
-        return todoService.deleteTodo(requestDto);
+    @DeleteMapping
+    public void deleteTodo(@RequestParam("id") int id, @RequestParam("password") String password) {
+        todoService.deleteTodo(id,password);
     }
+
+
+//    @PutMapping("/todos")
+//    public TodoResponseDto updateTodo(@RequestBody TodoRequestDto requestDto) {
+//        return todoService.updateTodo(requestDto);
+//    }
+//
+//    @DeleteMapping("/todos")
+//    public TodoResponseDto deleteTodo(@RequestBody TodoRequestDto requestDto) {
+//        return todoService.deleteTodo(requestDto);
+//    }
 
 }
